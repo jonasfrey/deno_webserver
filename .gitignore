@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!webserver.js
+readme.md
+O_request.module.js
+# etc...
