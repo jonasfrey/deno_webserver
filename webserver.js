@@ -60,7 +60,8 @@ const f_handler = async (o_http_request, o_connection_info) => {
     // console.log(o_stat)
     b_exists = true 
   }catch{
-    console.log('not exist')
+	
+    console.log(s_domain_or_ip_or_ip+' not exist')
   }
   if(b_exists){
 
