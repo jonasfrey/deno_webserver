@@ -5,6 +5,14 @@ var o_current_run_info = {
 
 import { O_path_file }  from "https://deno.land/x/o_path_file@0.1/O_path_file.module.js"
 
+window.o_deno_webserver = {
+  a_o_path_file_current_file: [
+    new O_path_file(import.meta.url.split('//').pop())
+  ]
+}
+// /console.log(window.o_deno_webserver)
+
+
 const o_config  = await import("./.deno_webserver/o_config.js");
 
 import { serve } from "https://deno.land/std@0.153.0/http/server.ts";
@@ -27,10 +35,10 @@ const f_handler = async (o_http_request, o_connection_info) => {
     new Date().time, 
     o_http_request.url
   )
-
-  o_json_db.f_o_create(
-    o_request
-  )
+    // console.log(o_http_request)
+    o_json_db.f_o_create(
+      o_request
+    )
 
   // console.log(o_http_request)
   var s_sep = "://"
@@ -49,7 +57,7 @@ const f_handler = async (o_http_request, o_connection_info) => {
   var b_exists = false
   try{
     var o_stat = await Deno.stat(s_domain_or_ip_or_ip);
-    console.log(o_stat)
+    // console.log(o_stat)
     b_exists = true 
   }catch{
     console.log('not exist')
@@ -57,9 +65,9 @@ const f_handler = async (o_http_request, o_connection_info) => {
   if(b_exists){
 
     var { f_handler } = await import(`./${s_domain_or_ip_or_ip}/f_handler.module.js`)
-    console.log(f_handler)
+    // console.log(f_handler)
     var o_response = await f_handler(o_http_request, o_connection_info);
-    console.log(o_response)
+    // console.log(o_response)
     return o_response
   }
   
