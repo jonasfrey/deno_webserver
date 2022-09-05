@@ -1,13 +1,13 @@
 var o_current_run_info = {
     a_s_argument : Deno.args,
-    s_current_path_name_file_name : import.meta.url.split('//')
+    s_current_folder_name_file_name : import.meta.url.split('//')
 }
 
-import { O_path_file }  from "https://deno.land/x/o_path_file@0.1/O_path_file.module.js"
+import { O_folder_file }  from "https://deno.land/x/o_folder_file@0.1/O_folder_file.module.js"
 
 window.o_deno_webserver = {
-  a_o_path_file_current_file: [
-    new O_path_file(import.meta.url.split('//').pop())
+  a_o_folder_file_current_file: [
+    new O_folder_file(import.meta.url.split('//').pop())
   ]
 }
 // /console.log(window.o_deno_webserver)
@@ -19,17 +19,16 @@ import { serve } from "https://deno.land/std@0.153.0/http/server.ts";
 
 import { O_json_db } from "https://deno.land/x/o_json_db@0.5/O_json_db.module.js";
 
-import {existsSync } from "https://deno.land/std/fs/mod.ts";
-
+import { O_json_db } from "https://deno.land/x/o_url/O_url.module.js";
 
 var o_json_db = new O_json_db()
-
-import * as log from "https://deno.land/std@0.153.0/log/mod.ts";
 
 import { O_request } from "./O_request.module.js";
 
 
 const f_handler = async (o_http_request, o_connection_info) => {
+  var o_url = new O_url(o_http_request.url)
+  console.log(o_url)
   var o_request = new O_request(
     o_connection_info.hostname, 
     new Date().time, 
