@@ -25,55 +25,82 @@ var o_json_db = new O_json_db()
 
 import { O_request } from "./O_request.module.js";
 
+var o_folder_file = new O_folder_file(import.meta.url.split("//").pop())
+
+
+window.o_deno_webserver = {
+  import_meta_url: import.meta.url, 
+  o_folder_file: o_folder_file,
+  s_path_name_folder_name_root: o_folder_file.s_folder_name, 
+  s_directory_seperator : "/"
+}
+
+window.o_deno_webserver.s_path_name_folder_name_default_handlers = 
+window.o_deno_webserver.s_path_name_folder_name_root + 
+window.o_deno_webserver.s_directory_seperator +
+"default_f_handlers" 
+
+window.o_deno_webserver.s_path_name_file_name_default_handler = 
+window.o_deno_webserver.s_path_name_folder_name_default_handlers + 
+window.o_deno_webserver.s_directory_seperator +
+"f_handler_fileexplorer.module.js"
+
 
 const f_handler = async (o_http_request, o_connection_info) => {
+  // var o_url = new O_url(o_http_request.url)
   var o_url = new O_url(o_http_request.url)
-
+  window.o_deno_webserver.o_url_request = o_url
   var o_request = new O_request(
     o_connection_info.hostname, 
     new Date().time, 
-    o_http_request.url
+    o_http_request.url,
   )
-  o_url.f_
-    // console.log(o_http_request)
-    o_json_db.f_o_create(
-      o_request
-    )
 
-  // console.log(o_http_request)
-  var s_sep = "://"
-  var a_s_part = o_http_request.url.split(s_sep)
-  var s_protocol = a_s_part.shift()
-  var s_rest = a_s_part.join(s_sep)
+  o_url.f_update_o_geolocation().then(
+    function(){//f_resolve
+        o_request.o_url = o_url
+        // console.log(o_http_request)
+        o_json_db.f_o_create(
+          o_request
+        )
+    },
+    function(){//f_reject
+    }
+  )
 
-  var a_s_part = s_rest.split("/")
-  var s_domain_or_ip_and_maybe_port = a_s_part.shift()
-  // console.log(s_domain_or_ip_and_maybe_port)
-  var a_s_part = s_domain_or_ip_and_maybe_port.split(":")
-  var s_domain_or_ip_or_ip = a_s_part.shift()
-  // console.log(s_domain_or_ip_or_ip)
-  var a_s_domain_level = s_domain_or_ip_or_ip.split(".")  
-  
-  var b_exists = false
+  window.o_deno_webserver.s_path_name_folder_name_domainorip_root = 
+  window.o_deno_webserver.s_path_name_folder_name_root + 
+  window.o_deno_webserver.s_directory_seperator +
+  o_url.s_hostname 
+
+   
+  var s_path_name_file_name_handler = 
+  window.o_deno_webserver.s_path_name_folder_name_domainorip_root + 
+  window.o_deno_webserver.s_directory_seperator +
+  "f_handler.module.js"
+
   try{
-    var o_stat = await Deno.stat(s_domain_or_ip_or_ip);
+    var o_stat = await Deno.stat(s_path_name_file_name_handler);
     // console.log(o_stat)
-    b_exists = true 
   }catch{
-	
-    console.log(s_domain_or_ip_or_ip+' not exist')
+    console.log(`${s_path_name_file_name_handler} handler does not exist, using default handler: ${window.o_deno_webserver.s_path_name_file_name_default_handler}`)
+    s_path_name_file_name_handler = window.o_deno_webserver.s_path_name_file_name_default_handler
   }
-  if(b_exists){
 
-    var { f_handler } = await import(`./${s_domain_or_ip_or_ip}/f_handler.module.js`)
-    // console.log(f_handler)
-    var o_response = await f_handler(o_http_request, o_connection_info);
-    // console.log(o_response)
-    return o_response
-  }
-  
+  var { f_handler } = await import(s_path_name_file_name_handler)
+  // console.log(f_handler)
+  return f_handler(o_http_request, o_connection_info).then(
+    function(o_response){ //f_resolve
+      return o_response
+    }
+  )
+  .catch(function(){
+    return new Response(
+      "server error",
+      { status: 500 }
+      )
+  });
 
-  return new Response("running", { status: 200 });
 };
 
 console.log(`HTTP webserver running. Access it at: http://localhost:${o_config.n_port}/`);
