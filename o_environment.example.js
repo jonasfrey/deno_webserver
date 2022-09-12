@@ -1,19 +1,31 @@
-var o_config = {
+var o_environment = {
     s_default_name: "deno_webserver",
     s_default_folder_name: ".${s_default_name}",
     o_default_domain_o_config: {
         s_default_file: "client.html",
     },
+    s_url: "https://localhost",
     n_port: 8080,
     // s_host_name: "2606:4700:4700::1111"//one.one.one.one
-    s_host_name: "[::1]", // ip6-localhost, 
-    s_path_certificate_file : "/path/to/certFile.crt", // 
-    s_path_key_file : "/path/to/keyFile.key",
+    s_host_name: "[::1]", // ip6-localhost,
+    o_ssl: {
+        b_auto_generate: true,
+        o_auto_generate:{
+            b: true, 
+            s_country_name_2_letter_code:'CH', 
+            s_state_or_province:'Switzerland', 
+            s_locality_name:'Bern', 
+            s_organization_name:'MyCompany', 
+            s_common_name:'MyCommonName', 
+            s_email_address:'my.email@dom.com', 
+        },
+        s_path_certificate_file : "./self_signed_cert.crt", // 
+        s_path_key_file : "./self_signed_key.key",
+    }
 }
 
 import {f_evaluate_object} from "https://deno.land/x/f_evaluate_object@0.1/f_evaluate_object.module.js"
 
-await f_evaluate_object(o_config,o_config)
+await f_evaluate_object(o_environment,o_environment)
 
-console.log(o_config)
-export {o_config}
+export {o_environment}
