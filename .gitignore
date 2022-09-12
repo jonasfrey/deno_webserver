@@ -1,6 +1,5 @@
 # Ignore everything
 *
-
 # But not these files...
 !.gitignore
 !webserver.js
@@ -8,4 +7,5 @@ readme.md
 O_request.module.js
 default_f_handlers/
 f_a_o_path_file_stack_trace.module.js
+o_environment.example.js
 # etc...

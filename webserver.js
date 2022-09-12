@@ -12,10 +12,19 @@ window.o_deno_webserver = {
 }
 // /console.log(window.o_deno_webserver)
 
-
-const o_config  = await import("./.deno_webserver/o_config.js");
+var s_path_o_environment_example = "./o_environment.example.js";
+var s_path_o_environment = "./o_environment.js";
+try{
+  const o_environment = await import("./o_environment.js")  
+  // var o_stat = await Deno.stat(s_path_o_environment);
+  // var s_text = await Deno.readTextFile(s_path_o_environment);
+}catch{
+  console.error(`${s_path_o_environment}: file does not exist, please run '$ cp ${s_path_o_environment_example} ${s_path_o_environment} and adjust the file content`)
+  Deno.exit(1)
+}
 
 import { serve } from "https://deno.land/std@0.153.0/http/server.ts";
+import { serveTls } from "https://deno.land/std@0.154.0/http/server.ts";
 
 import { O_json_db } from "https://deno.land/x/o_json_db@0.5/O_json_db.module.js";
 
@@ -104,4 +113,4 @@ const f_handler = async (o_http_request, o_connection_info) => {
 };
 
 console.log(`HTTP webserver running. Access it at: http://localhost:${o_config.n_port}/`);
-await serve(f_handler, { port: o_config.n_port, hostname: o_config.s_host_name });
+await serveTls(f_handler, { port: o_config.n_port, hostname: o_config.s_host_name });
