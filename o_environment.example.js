@@ -4,8 +4,14 @@ var o_environment = {
     o_default_domain_o_config: {
         s_default_file: "client.html",
     },
-    s_url: "https://localhost",
-    n_port: 8080,
+    o_not_encrypted:{        
+        s_url: "http://localhost",
+        n_port: 8080,
+    },
+    o_encrypted: {
+        s_url: "https://localhost",
+        n_port: 8443,
+    },
     // s_host_name: "2606:4700:4700::1111"//one.one.one.one
     s_host_name: "[::1]", // ip6-localhost,
     o_ssl: {
