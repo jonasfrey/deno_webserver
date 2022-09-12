@@ -190,7 +190,7 @@ async function(o_request){
  },
    { 
      port:parseInt(o_environment.o_not_encrypted.n_port),
-     hostname: o_environment.s_host_name,
+     hostname: o_environment.o_not_encrypted.s_host,
    }
  );
 
@@ -203,7 +203,7 @@ serveTls(
     certFile: o_environment.o_ssl.s_path_certificate_file,
     keyFile: o_environment.o_ssl.s_path_key_file,
     port: o_environment.o_encrypted.n_port,
-    hostname: o_environment.s_host_name,
+    hostname: o_environment.o_encrypted.s_host,
   }
 );
 

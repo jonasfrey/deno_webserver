@@ -5,11 +5,11 @@ var o_environment = {
         s_default_file: "client.html",
     },
     o_not_encrypted:{        
-        s_url: "http://localhost",
+        s_host: "::", // '::' = allow ipv4 and ipv6
         n_port: 8080,
     },
     o_encrypted: {
-        s_url: "https://localhost",
+        s_host: "::", // '::' = allow ipv4 and ipv6
         n_port: 8443,
     },
     // s_host_name: "2606:4700:4700::1111"//one.one.one.one
