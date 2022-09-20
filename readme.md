@@ -9,7 +9,7 @@ sudo apt install pm2
 ## start webserver 
 ### create a file `webserver.js` and import the module
 ```javascript
-import {O_webserver} from "https://deno.land/x/O_webserver@0.1/O_webserver.module.js"
+import {O_webserver} from "https://deno.land/x/o_webserver@0.4/O_webserver.module.js"
 
 var o_webserver = new O_webserver();
 
