@@ -4,7 +4,7 @@ import { O_folder_file }  from "https://deno.land/x/o_folder_file@0.3/O_folder_f
 
 import { serve, serveTls } from "https://deno.land/std@0.154.0/http/server.ts";
 
-import { O_json_db } from "https://deno.land/x/o_json_db@0.5/O_json_db.module.js";
+import { O_json_db } from "https://deno.land/x/o_json_db@1.2/O_json_db.module.js";
 
 import { O_url } from "https://deno.land/x/o_url/O_url.module.js";
 
@@ -23,7 +23,7 @@ class O_webserver{
    this.s_path_name_folder_name_root = o_folder_file.s_folder_name, 
    this.s_directory_seperator  = "/"
    this.s_path_o_environment =  "./o_environment.module.js";
-  this.s_url_o_environment = "https://deno.land/x/o_webserver/"+this.s_path_o_environment;
+  this.s_url_o_environment = "https://deno.land/x/o_webserver@[version]/"+this.s_path_o_environment;
     var o_self = this
   }
 
@@ -36,22 +36,26 @@ class O_webserver{
         console.error(`could not find ${this.s_path_o_environment}`)
         // var s_text = await Deno.readTextFile(s_path_o_environment);
       }catch{
-        console.log(`trying to download ${this.s_url_o_environment}`)
-        var o_process_dload_o_environment = await Deno.run(
-          {
-            cmd: 
-            [
-              "wget", 
-              this.s_url_o_environment
-            ]
 
-          }
-        )
-        var {status } = await o_process_dload_o_environment.status()
-        if(status){
-          console.error("could not download")
-          Deno.exit(1)
-        }
+        console.log(`${this.s_url_o_environment}: no such file, please download it with this command`)
+        console.log(`wget ${this.s_url_o_environment}`)
+        Deno.exit(1);
+        // console.log(`trying to download ${this.s_url_o_environment}`)
+        // var o_process_dload_o_environment = await Deno.run(
+        //   {
+        //     cmd: 
+        //     [
+        //       "wget", 
+        //       this.s_url_o_environment
+        //     ]
+
+        //   }
+        // )
+        // var {status } = await o_process_dload_o_environment.status()
+        // if(status){
+        //   console.error("could not download")
+        //   Deno.exit(1)
+        // }
         // console.error(`could not find ${this.s_path_o_environment}`)
         // console.error(`${s_path_o_environment}: file does not exist, please run '$ cp ${s_path_o_environment_example} ${s_path_o_environment} and adjust the file content`)
         // Deno.exit(1)
@@ -236,8 +240,8 @@ class O_webserver{
     var o_self = this
 
     await this.f_load_o_environment();
-    this.f_serve()
-    this.f_serveTls()
+    await this.f_serve()
+    await this.f_serveTls()
     console.log(`HTTP webserver running. Access it at: ${o_self.o_environment.o_not_encrypted.s_url}:${o_self.o_environment.o_not_encrypted.n_port}/`);
     console.log(`HTTPS webserver running. Access it at: ${o_self.o_environment.o_encrypted.s_url}:${o_self.o_environment.o_encrypted.n_port}/`);
   }
