@@ -12,6 +12,7 @@
 !default_f_handlers/*
 !default_f_handlers/
 !default_f_handlers
+!o_environment.module.js
 !f_a_o_path_file_stack_trace.module.js
 !o_environment.example.js
 # etc...
