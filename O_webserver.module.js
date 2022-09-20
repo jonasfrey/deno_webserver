@@ -4,11 +4,9 @@ import { O_folder_file }  from "https://deno.land/x/o_folder_file@0.3/O_folder_f
 
 import { serve, serveTls } from "https://deno.land/std@0.154.0/http/server.ts";
 
-import { O_json_db } from "https://deno.land/x/o_json_db@1.2/O_json_db.module.js";
+import { O_json_db } from "https://deno.land/x/o_json_db@1.4/O_json_db.module.js";
 
 import { O_url } from "https://deno.land/x/o_url/O_url.module.js";
-
-import {f_handler} from "./default_f_handlers/fileexplorer/f_handler.js"
 
 import { O_request } from "./O_request.module.js";
 
