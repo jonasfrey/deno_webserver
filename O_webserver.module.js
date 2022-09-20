@@ -23,7 +23,7 @@ class O_webserver{
    this.s_path_name_folder_name_root = o_folder_file.s_folder_name, 
    this.s_directory_seperator  = "/"
    this.s_path_o_environment =  "./o_environment.module.js";
-  this.s_url_o_environment = "https://deno.land/x/o_webserver@0.1/"+this.s_path_o_environment;
+  this.s_url_o_environment = "https://deno.land/x/o_webserver/"+this.s_path_o_environment;
     var o_self = this
   }
 
