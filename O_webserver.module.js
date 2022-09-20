@@ -38,10 +38,14 @@ class O_webserver{
       }catch{
         console.log(`trying to download ${this.s_url_o_environment}`)
         var o_process_dload_o_environment = await Deno.run(
-          [
-            "wget", 
-            this.s_url_o_environment
-          ]
+          {
+            cmd: 
+            [
+              "wget", 
+              this.s_url_o_environment
+            ]
+
+          }
         )
         var {status } = await o_process_dload_o_environment.status()
         if(status){
