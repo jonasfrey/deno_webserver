@@ -17,6 +17,7 @@ var o_folder_file = new O_folder_file(import.meta.url.split("//").pop())
 
 class O_webserver{
   constructor(){
+    console.log(import.meta)
   this.o_json_db = new O_json_db()
    this.import_meta_url = import.meta.url, 
    this.o_folder_file = o_folder_file,
@@ -246,10 +247,8 @@ class O_webserver{
     console.log(`HTTPS webserver running. Access it at: ${o_self.o_environment.o_encrypted.s_url}:${o_self.o_environment.o_encrypted.n_port}/`);
   }
 
-  
+ 
 }
-
-
 
 
 export {O_webserver}
