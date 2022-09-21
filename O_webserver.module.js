@@ -33,15 +33,17 @@ class O_webserver{
             var o_response = await fetch(s_url)
             var s_text = await o_response.text();
             console.log(`${s_url} :file did not exists yet, and was downloaded automaitcally`)
-            await Deno.writeTextFile(this.s_path_o_config, s_text);
+            await Deno.writeTextFile(s_path, s_text);
         }
         
-        var {f_handler} = await import(this.s_path_o_config)
+        var {f_handler} = await import(s_path)
         return Promise.resolve(f_handler)
     }
     async f_o_config(){
         
-        var s_path = "./"+this.s_import_meta_url_path_file_name.toLowerCase()+"_config"
+        var s_part = this.s_import_meta_url_path_file_name.split('.');
+
+        var s_path = "./"+s_part[0].toLowerCase()+"_config." + s_part.slice(1).join('.')
         var s_url = this.s_import_meta_url_path_folder_name + s_path
         
         try{
