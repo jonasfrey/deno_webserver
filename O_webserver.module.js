@@ -12,11 +12,12 @@ var o_folder_file = new O_folder_file(import.meta.url.split("//").pop())
 
 class O_webserver{
   constructor(){
-    console.log(f_a_o_path_file_stack_trace())
+    this.a_o_path_file_stack_trace = f_a_o_path_file_stack_trace()
+
   this.o_json_db = new O_json_db()
-   this.import_meta_url = import.meta.url, 
+   this.import_meta_url = import.meta.url
    this.o_folder_file = o_folder_file,
-   this.s_path_name_folder_name_root = o_folder_file.s_folder_name, 
+   this.s_path_name_folder_name_root = this.a_o_path_file_stack_trace[0].s_folder_name, 
    this.s_directory_seperator  = "/"
     var o_self = this
     this.b_init = false
