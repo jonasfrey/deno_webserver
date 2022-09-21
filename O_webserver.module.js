@@ -6,12 +6,7 @@ import { serve, serveTls } from "https://deno.land/std@0.154.0/http/server.ts";
 
 import { O_json_db } from "https://deno.land/x/o_json_db@1.4/O_json_db.module.js";
 
-import { O_url } from "https://deno.land/x/o_url/O_url.module.js";
-
-import { O_request } from "./O_request.module.js";
-
 var o_folder_file = new O_folder_file(import.meta.url.split("//").pop())
-
 
 class O_webserver{
   constructor(){
@@ -125,70 +120,23 @@ class O_webserver{
 
   async f_serveTls(){
     var o_self = this
-
     // check if ssl cert exists 
     await o_self.f_check_if_ssl_exists();
 
-    await o_self.f_init();
+    await this.f_init();
+    var {f_handler} = await import("./f_handler.module.js");
+
     // var self = this;
     serveTls(
-      async function(o_http_request, o_connection_info){
-
-    console.log(o_self)
-    // var o_url = new O_url(o_http_request.url)
-    var o_url = new O_url(o_http_request.url)
-    o_self.o_url_request = o_url
-    var o_request = new O_request(
-      o_connection_info.hostname, 
-      new Date().time, 
-      o_http_request.url,
-    )
-    
-    o_url.f_update_o_geolocation().then(
-      function(){//f_resolve
-          o_request.o_url = o_url
-          // console.log(o_http_request)
-          o_self.o_json_db.f_o_create(
-            o_request
+      async function(
+        o_request, 
+        o_connection_info
+      ){ 
+        return f_handler(
+          o_request,
+          o_connection_info, 
+          o_self
           )
-      },
-      function(){//f_reject
-      }
-    )
-    
-    o_self.s_path_name_folder_name_domainorip_root = 
-    o_self.s_path_name_folder_name_root + 
-    o_self.s_directory_seperator +
-    o_url.s_hostname 
-    
-     
-    var s_path_name_file_name_handler = 
-    o_self.s_path_name_folder_name_domainorip_root + 
-    o_self.s_directory_seperator +
-    "f_handler.module.js"
-    
-    try{
-      var o_stat = await Deno.stat(s_path_name_file_name_handler);
-      // console.log(o_stat)
-    }catch{
-      console.log(`${s_path_name_file_name_handler} handler does not exist, using default handler: ${o_self.s_path_name_file_name_default_handler}`)
-      s_path_name_file_name_handler = o_self.s_path_name_file_name_default_handler
-    }
-    
-    var { f_handler } = await import(s_path_name_file_name_handler)
-    // console.log(f_handler)
-    return f_handler(o_http_request, o_connection_info, o_self).then(
-      function(o_response){ //f_resolve
-        return o_response
-      }
-    )
-    .catch(function(){
-      return new Response(
-        "server error",
-        { status: 500 }
-        )
-    });
-    
       },
       { 
         certFile: o_self.o_config.o_ssl.s_path_certificate_file,
@@ -203,24 +151,15 @@ class O_webserver{
   async f_serve(){
     var o_self = this;
     await this.f_init();
-    
+    var {f_handler} = await import("./default_f_handlers/redirect_from_http_to_https/f_handler.module.js")
     serve(
-      async function(o_request){
-        console.log(o_self);
-
-        var s_url_new = o_request.url.replace("http", "https");
-        s_url_new = s_url_new.replace(":"+o_self.o_config.o_not_encrypted.n_port, ":"+o_self.o_config.o_encrypted.n_port)
-         return Promise.resolve(new Response(
-           "moved",
-           { 
-               status: 301,  
-               headers: {
-                   "location": s_url_new,
-               },
-           }
-         ))
-      
-      }, 
+      async function(o_request, o_connection_info){
+        return f_handler(
+          o_request, 
+          o_connection_info, 
+          o_self
+        )
+      },
       { 
         port:parseInt(o_self.o_config.o_not_encrypted.n_port),
         hostname: o_self.o_config.o_not_encrypted.s_host,
