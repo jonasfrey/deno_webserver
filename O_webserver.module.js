@@ -6,11 +6,13 @@ import { serve, serveTls } from "https://deno.land/std@0.154.0/http/server.ts";
 
 import { O_json_db } from "https://deno.land/x/o_json_db@1.4/O_json_db.module.js";
 
+import {f_a_o_path_file_stack_trace } from "./f_a_o_path_file_stack_trace.module.js";
+
 var o_folder_file = new O_folder_file(import.meta.url.split("//").pop())
 
 class O_webserver{
   constructor(){
-    console.log(import.meta)
+    console.log(f_a_o_path_file_stack_trace())
   this.o_json_db = new O_json_db()
    this.import_meta_url = import.meta.url, 
    this.o_folder_file = o_folder_file,

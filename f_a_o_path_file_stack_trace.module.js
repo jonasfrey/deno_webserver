@@ -2,7 +2,7 @@ import {O_path_file} from "https://deno.land/x/o_path_file@0.1/O_path_file.modul
 
 
 var f_a_o_path_file_stack_trace = function(s_trace){
-
+    var s_trace = new Error().stack
     let a_s_line  = s_trace.split('\n')
     var a_o_path_file_stack_trace = []
     var s_search = "file://"
