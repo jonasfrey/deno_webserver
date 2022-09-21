@@ -17,7 +17,7 @@ class O_webserver{
 
         this.s_import_meta_url = import.meta.url                    // 'https://deno.land/x/[modname]@[versname]/[filename]'
         this.s_import_meta_url_path_file_name = s_file_name;        // '[filename]'
-        this.s_import_meta_url_path_folder_name = s_path_name;      // 'https://deno.land/x/[modname]@[versname]'
+        this.s_import_meta_url_path_folder_name = s_path_name+"/";      // 'https://deno.land/x/[modname]@[versname]'
         
         this.s_directory_seperator  = "/"
         var o_self = this
