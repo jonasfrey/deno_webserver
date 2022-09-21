@@ -26,8 +26,8 @@ let f_handler = async function(
       function(){//f_reject
       }
     )
-    
-    var s_path_handler = `./${o_webserver.o_url.s_domainname}/f_handler.module.js`;
+    var s_path_handler = `${o_webserver.s_path_name_folder_name_root}/${o_webserver.o_url.s_domainname}/f_handler.module.js`;
+    console.log(s_path_handler)
     var s_path_handler_default = `./default_f_handlers/fileexplorer/f_handler.module.js`;
     try{
         var o_stat = await Deno.stat(s_path_handler);
