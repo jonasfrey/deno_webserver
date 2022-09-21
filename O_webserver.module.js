@@ -55,6 +55,7 @@ class O_webserver{
 
 }
   async f_init(){
+    var self = this;
     if(!this.b_init){
       self.o_config = await this.f_o_config();
       this.b_init = true;
