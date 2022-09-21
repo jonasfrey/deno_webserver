@@ -5,13 +5,9 @@
 !O_webserver.module.js
 !readme.md
 !O_request.module.js
-!default_f_handlers/fileexplorer/f_handler.js
-!default_f_handlers/fileexplorer/*
-!default_f_handlers/fileexplorer/
-!default_f_handlers/fileexplorer
-!default_f_handlers/*
 !default_f_handlers/
-!default_f_handlers
+!default_f_handlers/**
+!
 !f_a_o_path_file_stack_trace.module.js
 !o_webserver_config.module.js
 # etc...
