@@ -8,7 +8,7 @@
 !default_f_handlers/
 !default_f_handlers/**
 !
-!f_a_o_path_file_stack_trace.module.js
+!f_a_o_url_stack_trace.module.js
 !o_webserver_config.module.js
 !f_handler.module.js
 # etc...
