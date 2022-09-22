@@ -12,7 +12,7 @@ var f_handler = async function(
             f_reject
         ){
             var s_pathname_to_folder_or_file = 
-            o_webserver.s_path_name_folder_name_root + 
+            "." + 
             "/"+
             o_webserver.o_url.s_domainname +
             decodeURI(
