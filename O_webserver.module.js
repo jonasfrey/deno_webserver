@@ -2,6 +2,7 @@ import {
     serve,
     serveTls
 } from "https://deno.land/std@0.154.0/http/server.ts";
+
 import {
     O_json_db
 } from "https://deno.land/x/o_json_db@1.4/O_json_db.module.js";
@@ -180,8 +181,9 @@ class O_webserver {
         await this.f_init();
         await this.f_serve()
         await this.f_serveTls()
-        console.log(`HTTP webserver running. Access it at: ${o_self.o_config.o_not_encrypted.s_url}/`);
-        console.log(`HTTPS webserver running. Access it at: ${o_self.o_config.o_encrypted.s_url}/`);
+
+        console.log(`HTTP webserver running. Access it at: ${o_self.o_config.o_not_encrypted.s_url}`);
+        console.log(`HTTPS webserver running. Access it at: ${o_self.o_config.o_encrypted.s_url}`);
     }
 
 
