@@ -1,16 +1,16 @@
 var o_webserver_config = {
-  s_default_name: "deno_webserver",
-  s_default_folder_name: ".${s_default_name}",
   o_default_domain_o_config: {
       s_default_file: "client.html",
   },
   o_not_encrypted:{        
       s_host: "::", // '::' = allow ipv4 and ipv6
       n_port: 8080,
+      s_url: "http://localhost:${o_not_encrypted.n_port}/"
   },
   o_encrypted: {
       s_host: "::", // '::' = allow ipv4 and ipv6
       n_port: 8443,
+      s_url: "https://localhost:${o_encrypted.n_port}/"
   },
   // s_host_name: "2606:4700:4700::1111"//one.one.one.one
   s_host_name: "[::1]", // ip6-localhost,
