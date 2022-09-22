@@ -14,7 +14,7 @@ class O_webserver {
     constructor() {
 
         this.o_json_db = new O_json_db()
-
+        this.a_o_url_stack_trace = f_a_o_url_stack_trace();
         this.o_url_import_meta_url = new O_url(import.meta.url);
     
         this.s_directory_seperator = "/"
@@ -22,23 +22,7 @@ class O_webserver {
         this.b_init = false
     }
 
-    async f_f_handler() {
-        var s_path = "./f_handler.module.js"
-        var s_url = this.s_import_meta_url_path_folder_name + s_path
-        try {
-            var o_stat = await Deno.stat(s_path)
-        } catch {
-            var o_response = await fetch(s_url)
-            var s_text = await o_response.text();
-            console.log(`${s_url} :file did not exists yet, and was downloaded automaitcally`)
-            await Deno.writeTextFile(s_path, s_text);
-        }
 
-        var {
-            f_handler
-        } = await import(s_path)
-        return Promise.resolve(f_handler)
-    }
     async f_download_ifnotexisting_remote_module_and_import(s_path_relative){
 
         // /home/root/tst.js            -> s_pathfile
@@ -46,8 +30,7 @@ class O_webserver {
         // file:///home/root/tst.js     -> s_urlpathfile
         // file:///home/root/           -> s_urlpathfolder
 
-        var a_o_url = f_a_o_url_stack_trace();
-        var o_url_first_js_file = a_o_url.slice(-1)[0];
+        var o_url_first_js_file = this.a_o_url_stack_trace.slice(-1)[0];
         var s_import_meta_url_path_folder_name = import.meta.url.split("/").slice(0,-1).join("/"); 
         var s_urlpathfile_remote = s_import_meta_url_path_folder_name + "/" + s_path_relative;
         var s_urlpathfile_local = o_url_first_js_file.o_URL.href.split("/").slice(0,-1).join("/") + "/" + s_path_relative;
@@ -146,8 +129,7 @@ class O_webserver {
         await o_self.f_check_if_ssl_exists();
 
         await this.f_init();
-
-        var f_handler = await this.f_f_handler();
+        var {f_handler} = await import("./f_handler.module.js");
 
         // var self = this;
         serveTls(

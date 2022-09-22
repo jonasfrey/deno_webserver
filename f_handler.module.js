@@ -26,16 +26,21 @@ let f_handler = async function(
       function(){//f_reject
       }
     )
-    
-    var s_path_handler = `./${o_webserver.o_url.s_domainname}/f_handler.module.js`;
-    var s_path_handler_default = `./default_f_handlers/fileexplorer/f_handler.module.js`;
+
+    var s_pathfile_handler_default = `./${o_webserver.o_url.s_domainname}/f_handler.module.js`;
+
     try{
-        var o_stat = await Deno.stat(s_path_handler);
+        var o_stat = await Deno.stat(s_pathfile_handler_default);
     }catch{
-        console.log(`${s_path_handler}: could not open file`)
+        console.log(`${s_pathfile_handler_default}: could not open file`)
     }
+    
     if(o_stat){
-        var o_module = await import(s_path_handler);
+
+        var o_url_first_js_file = this.a_o_url_stack_trace.slice(-1)[0];
+        var s_pathfile_local_handler = o_url_first_js_file.o_URL.href.split("file://").slice(1)[0].split("/").slice(0,-1).join("/") +"/"+ s_pathfile_handler_default;
+
+        var o_module = await import(s_pathfile_local_handler);
         return o_module.f_handler(
             o_http_request,
             o_connection_info,
