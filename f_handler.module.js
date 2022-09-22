@@ -38,7 +38,7 @@ let f_handler = async function(
     if(o_stat){
 
         var o_url_first_js_file = o_webserver.a_o_url_stack_trace.slice(-1)[0];
-        var s_pathfile_local_handler = o_url_first_js_file.o_URL.href.split("file://").slice(1)[0].split("/").slice(0,-1).join("/") +"/"+ s_pathfile_handler_default;
+        var s_pathfile_local_handler = o_url_first_js_file.o_URL.href.split("/").slice(0,-1).join("/") +"/"+ s_pathfile_handler_default;
 
         var o_module = await import(s_pathfile_local_handler);
         return o_module.f_handler(
