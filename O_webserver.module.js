@@ -11,6 +11,8 @@ import {O_url} from "https://deno.land/x/o_url@0.3/O_url.module.js"
 
 import { f_a_o_url_stack_trace } from "./f_a_o_url_stack_trace.module.js";
 
+import {o_http_request_handler_file_explorer } from "./a_o_http_request_handler.module.js"
+
 class O_webserver {
     constructor() {
 
@@ -156,12 +158,9 @@ class O_webserver {
     async f_serve() {
         var o_self = this;
         await this.f_init();
-        var {
-            f_http_request_handler
-        } = await import("./default_f_http_request_handlers/redirect_from_http_to_https/f_http_request_handler.module.js")
         serve(
             async function(o_request, o_connection_info) {
-                return f_http_request_handler(
+                return o_http_request_handler_file_explorer.f_http_request_handler(
                     o_request,
                     o_connection_info,
                     o_self
