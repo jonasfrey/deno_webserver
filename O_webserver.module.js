@@ -7,7 +7,7 @@ import {
     O_json_db
 } from "https://deno.land/x/o_json_db@4.0/O_json_db.module.js";
 
-import {O_url} from "https://deno.land/x/o_url@0.3/O_url.module.js"
+import {O_url} from "https://deno.land/x/o_url@0.4/O_url.module.js"
 
 import { f_a_o_url_stack_trace } from "./f_a_o_url_stack_trace.module.js";
 

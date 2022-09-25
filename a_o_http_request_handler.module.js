@@ -19,11 +19,9 @@ new O_http_request_handler(
         o_connection_info, 
         o_webserver
         ){
-        return new Promise(
-            async function(
-                f_resolve, 
-                f_reject
-            ){
+
+                var o_URL = new URL(o_http_request.url)
+
                 var s_pathname_to_folder_or_file = 
                 "." + 
                 "/"+
@@ -36,7 +34,7 @@ new O_http_request_handler(
                     // console.log(o_stat)
                 }catch{
                     // file or folder does not exist
-                    return f_resolve(
+                    return Promise.resolve(
                         new Response(
                             "not found",
                             { status: 404 }
@@ -44,6 +42,20 @@ new O_http_request_handler(
                     )
                 }
                 if(!o_stat.isFile){
+                    if(o_URL.pathname[o_URL.pathname.length-1] != "/"){
+                        console.log(o_URL.href.replace(o_URL.pathname, o_URL.pathname+"/"))
+                        // if is folder but last char in path is not a slash, redirect to location with trailing slash
+                        return Promise.resolve(new Response(
+                            "moved",
+                            { 
+                                status: 301,  
+                                headers: {
+                                    "location": o_URL.href.replace(o_URL.pathname, o_URL.pathname+"/"),
+                                },
+                            }
+                        ))
+                    }
+                    // if(o_http_request.o_webserver.o_url)
                     var s = `<a href='..'>/..</a><br>`
                     var o_symbol = await Deno.readDir(s_pathname_to_folder_or_file);
                     for await( var o of o_symbol){
@@ -53,7 +65,7 @@ new O_http_request_handler(
                         }
                         s+=`<a href='${s_path_name_relative}'>${s_path_name_relative}</a><br>`
                     }
-                    return f_resolve(
+                    return Promise.resolve(
                         new Response(
                             s,
                             { 
@@ -73,9 +85,9 @@ new O_http_request_handler(
                     }else{
                         var s_mime_type = "text/plain"
                     }
-                    Deno.readFile(s_pathname_to_folder_or_file).then(
+                    return Deno.readFile(s_pathname_to_folder_or_file).then(
                         function(s_file_content){ // f_resolve
-                            return f_resolve(
+                            return Promise.resolve(
                                 
                                 new Response(
                                     s_file_content,
@@ -93,8 +105,6 @@ new O_http_request_handler(
                     
                 }
     
-            }
-        )
     
     
     

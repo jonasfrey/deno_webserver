@@ -1,4 +1,4 @@
-import {O_url} from "https://deno.land/x/o_url@0.3/O_url.module.js"
+import {O_url} from "https://deno.land/x/o_url@0.4/O_url.module.js"
 
 var f_a_o_url_stack_trace = function(){
     
