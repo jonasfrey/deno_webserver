@@ -5,10 +5,10 @@
 !O_webserver.module.js
 !readme.md
 !O_request.module.js
-!default_f_handlers/
-!default_f_handlers/**
+!default_f_http_request_handlers/
+!default_f_http_request_handlers/**
 !
 !f_a_o_url_stack_trace.module.js
 !o_webserver_config.module.js
-!f_handler.module.js
+!f_http_request_handler.module.js
 # etc...
