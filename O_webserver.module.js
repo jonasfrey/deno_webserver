@@ -135,7 +135,7 @@ class O_webserver {
         var {f_http_request_handler} = await import("./f_http_request_handler.module.js");
 
         // var self = this;
-        serveTls(
+        return serveTls(
             async function(
                 o_request,
                 o_connection_info
@@ -152,13 +152,12 @@ class O_webserver {
                 hostname: o_self.o_config.o_encrypted.s_host,
             }
         );
-        return Promise.resolve(true)
 
     }
     async f_serve() {
         var o_self = this;
         await this.f_init();
-        serve(
+        return serve(
             async function(o_request, o_connection_info) {
                 return o_http_request_handler_file_explorer.f_http_request_handler(
                     o_request,
@@ -170,7 +169,6 @@ class O_webserver {
                 hostname: o_self.o_config.o_not_encrypted.s_host,
             }
         )
-        return Promise.resolve(true)
 
     }
 
