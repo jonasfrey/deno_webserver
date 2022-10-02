@@ -85,39 +85,41 @@ var o_http_request_handler_default = new O_http_request_handler(
 
 var o_http_request_handler_file_explorer = 
 new O_http_request_handler(
-    "file_explorer", 
+    "file_explorer",
     async function(
         o_http_connection, 
         o_request_event,
         o_webserver
         ){
 
-                var o_URL = new URL(o_request_event.request.url)
+            var o_URL = new URL(o_request_event.request.url)
 
-                var s_pathname_to_folder_or_file = 
-                    o_webserver.s_path_o_webserver_root +
-                    `/${o_URL.hostname}/`+
-                    decodeURI(
-                        o_URL.pathname
-                    );
-                console.log(s_pathname_to_folder_or_file)
-                try{
-                    var o_stat = await Deno.stat(s_pathname_to_folder_or_file);
-                    // console.log(o_stat)
-                }catch{
-                    // file or folder does not exist
+            var s_pathname_to_folder_or_file = 
+                o_webserver.s_path_o_webserver_root +
+                `/${o_URL.hostname}/`+
+                decodeURI(
+                    o_URL.pathname
+                );
+            // console.log(s_pathname_to_folder_or_file)
+            try{
+                var o_stat = await Deno.stat(s_pathname_to_folder_or_file);
+                // console.log(o_stat)
+            }catch{
+                // file or folder does not exist
+                return o_request_event.respondWith(
+                    new Response(
+                        "not found",
+                        { status: 404 }
+                    )
+                )
+            }
+            if(!o_stat.isFile){
+
+                if(o_URL.pathname[o_URL.pathname.length-1] != "/"){
+                    // console.log(o_URL.href.replace(o_URL.pathname, o_URL.pathname+"/"))
+                    // if is folder but last char in path is not a slash, redirect to location with trailing slash
                     return o_request_event.respondWith(
                         new Response(
-                            "not found",
-                            { status: 404 }
-                        )
-                    )
-                }
-                if(!o_stat.isFile){
-                    if(o_URL.pathname[o_URL.pathname.length-1] != "/"){
-                        console.log(o_URL.href.replace(o_URL.pathname, o_URL.pathname+"/"))
-                        // if is folder but last char in path is not a slash, redirect to location with trailing slash
-                        return o_request_event.respondWith(
                             "moved",
                             { 
                                 status: 301,  
@@ -126,56 +128,57 @@ new O_http_request_handler(
                                 },
                             }
                         )
-                    }
-                    // if(o_http_request.o_webserver.o_url)
-                    var s = `<a href='..'>/..</a><br>`
-                    var o_symbol = await Deno.readDir(s_pathname_to_folder_or_file);
-                    for await( var o of o_symbol){
-                        var s_path_name_relative = o.name
-                        if(!o.isFile){
-                            var s_path_name_relative = o.name + ((o.name.indexOf('/') == (o.name.length -1)) ? '': '/')
-                        }
-                        s+=`<a href='${s_path_name_relative}'>${s_path_name_relative}</a><br>`
-                    }
-                    return o_request_event.respondWith(
-                        new Response(
-                            s,
-                            { 
-                                status: 200,  
-                                headers: {
-                                    "content-type": "text/html",
-                                },
-                            }
-                            )
                     )
                 }
-                if(o_stat.isFile){
-                    var o_folder_file = new O_folder_file(s_pathname_to_folder_or_file)
-                    // console.log(o_folder_file)
-                    if(o_folder_file.o_mime_type_guessed_by_file_extension?.s_mime_type){
-                        s_mime_type = o_folder_file.o_mime_type_guessed_by_file_extension.s_mime_type
-                    }else{
-                        var s_mime_type = "text/plain"
+                // if(o_http_request.o_webserver.o_url)
+                var s = `<a href='..'>/..</a><br>`
+                var o_symbol = await Deno.readDir(s_pathname_to_folder_or_file);
+                for await( var o of o_symbol){
+                    var s_path_name_relative = o.name
+                    if(!o.isFile){
+                        var s_path_name_relative = o.name + ((o.name.indexOf('/') == (o.name.length -1)) ? '': '/')
                     }
-                    return Deno.readFile(s_pathname_to_folder_or_file).then(
-                        function(s_file_content){ // f_resolve
-                            return o_request_event.respondWith(
-                                
-                                new Response(
-                                    s_file_content,
-                                    { 
-                                        status: 200, 
-                                        headers: {
-                                            "content-type": s_mime_type,
-                                        },
-                                }
-                                )
-                                )
-                                
-                            }
-                        )
-                    
+                    s+=`<a href='${s_path_name_relative}'>${s_path_name_relative}</a><br>`
                 }
+                return o_request_event.respondWith(
+                    new Response(
+                        s,
+                        { 
+                            status: 200,  
+                            headers: {
+                                "content-type": "text/html",
+                            },
+                        }
+                        )
+                )
+            }
+            if(o_stat.isFile){
+                var o_folder_file = new O_folder_file(s_pathname_to_folder_or_file)
+                // console.log(o_folder_file)
+                if(o_folder_file.o_mime_type_guessed_by_file_extension?.s_mime_type){
+                    s_mime_type = o_folder_file.o_mime_type_guessed_by_file_extension.s_mime_type
+                }else{
+                    var s_mime_type = "text/plain"
+                }
+                return Deno.readFile(s_pathname_to_folder_or_file).then(
+                    function(s_file_content){ // f_resolve
+                        return o_request_event.respondWith(
+                            
+                            new Response(
+                                s_file_content,
+                                { 
+                                    status: 200, 
+                                    headers: {
+                                        "content-type": s_mime_type,
+                                    },
+                            }
+                            )
+                            )
+                            
+                        }
+                    )
+                
+            }
     
     
     
