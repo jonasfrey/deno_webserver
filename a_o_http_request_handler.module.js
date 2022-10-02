@@ -40,10 +40,14 @@ var o_http_request_handler_default = new O_http_request_handler(
             function(){//f_reject
             }
         )
+
         var s_pathfile_handler_default = 
         o_webserver.s_path_o_webserver_root +
             `/${o_URL.hostname}/f_http_request_handler.module.js`
 
+            console.log(o_URL)
+        console.log(o_webserver)
+        console.log(s_pathfile_handler_default)
 
         try{
             var o_stat = await Deno.stat(s_pathfile_handler_default);
