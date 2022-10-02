@@ -40,42 +40,52 @@ var o_http_request_handler_default = new O_http_request_handler(
             function(){//f_reject
             }
         )
+        var s_pathfile_handler_default = 
+        o_webserver.s_path_o_webserver_root +
+            `/${o_URL.hostname}/f_http_request_handler.module.js`
 
-        return o_http_request_handler_file_explorer.f_http_request_handler(
-            o_http_connection, 
-            o_request_event,
-            o_webserver
-        )
 
-        var s_pathfile_handler_default = `./${o_webserver.o_url.s_domainname}/f_http_request_handler.module.js`;
+        try{
+            var o_stat = await Deno.stat(s_pathfile_handler_default);
+        }catch{
+            console.log(`${s_pathfile_handler_default}: could not open file`)
+        }
 
-        // try{
-        //     var o_stat = await Deno.stat(s_pathfile_handler_default);
-        // }catch{
-        //     console.log(`${s_pathfile_handler_default}: could not open file`)
-        // }
-        
-        // if(o_stat){
 
-        //     var o_url_first_js_file = o_webserver.a_o_url_stack_trace.slice(-1)[0];
-        //     var s_pathfile_local_handler = o_url_first_js_file.o_URL.href.split("/").slice(0,-1).join("/") +"/"+ s_pathfile_handler_default;
+        if(o_stat){
+            
 
-        //     var o_module = await import(s_pathfile_local_handler);
-        //     return o_module.f_http_request_handler(
-        //         o_http_request,
-        //         o_connection_info,
-        //         o_webserver
-        //     )
-        // }else{
-        //     return Promise.resolve(
-        //         new Response(
-        //             "f_http_request_handler.module.js not found",
-        //             { status: 404 }
-        //         )
-        //     )
-        //     // console.log(`${s_path_handler_default}: is being used as default f_http_request_handler`);
-        //     // var o_module = await import(s_path_handler_default)
-        // }
+            // var o_url_first_js_file = o_webserver.a_o_url_stack_trace.slice(-1)[0];
+            // var s_pathfile_local_handler = o_url_first_js_file.o_URL.href.split("/").slice(0,-1).join("/") +"/"+ s_pathfile_handler_default;
+            // var o_module = await import(s_pathfile_local_handler);
+            var o_module = await import(s_pathfile_handler_default);
+            // console.log(o_module)
+            // var a = o_module.f_http_request_handler(
+            //     o_http_connection, 
+            //     o_request_event,
+            //     o_webserver
+            // )
+            return o_module.f_http_request_handler(
+                o_http_connection, 
+                o_request_event,
+                o_webserver
+            )
+            // console.log(a)
+            // return o_module.f_http_request_handler(
+            //     o_http_connection, 
+            //     o_request_event,
+            //     o_webserver
+            // )
+        }else{
+            return o_request_event.respondWith(
+                new Response(
+                    "f_http_request_handler.module.js not found",
+                    { status: 404 }
+                )
+            )
+            // console.log(`${s_path_handler_default}: is being used as default f_http_request_handler`);
+            // var o_module = await import(s_path_handler_default)
+        }
 
     }
 )
