@@ -42,7 +42,7 @@ var o_http_request_handler_default = new O_http_request_handler(
         )
 
         var s_pathfile_handler_default = 
-        o_webserver.s_path_o_webserver_root +
+            o_webserver.s_path_o_webserver_root +
             `/${o_URL.hostname}/f_http_request_handler.module.js`
 
 
@@ -60,23 +60,13 @@ var o_http_request_handler_default = new O_http_request_handler(
             // var s_pathfile_local_handler = o_url_first_js_file.o_URL.href.split("/").slice(0,-1).join("/") +"/"+ s_pathfile_handler_default;
             // var o_module = await import(s_pathfile_local_handler);
             var o_module = await import("file://"+s_pathfile_handler_default); // file:// is very important
-            // console.log(o_module)
-            // var a = o_module.f_http_request_handler(
-            //     o_http_connection, 
-            //     o_request_event,
-            //     o_webserver
-            // )
+
             return o_module.f_http_request_handler(
                 o_http_connection, 
                 o_request_event,
                 o_webserver
             )
-            // console.log(a)
-            // return o_module.f_http_request_handler(
-            //     o_http_connection, 
-            //     o_request_event,
-            //     o_webserver
-            // )
+
         }else{
             return o_request_event.respondWith(
                 new Response(
@@ -205,7 +195,7 @@ new O_http_request_handler(
         var o_URL = new URL(o_request_event.request.url)
 
         var s_response = await fetch(s_url+o_URL.pathname);
-        return Promise.resolve(
+        return o_request_event.respondWith(
             new Response(s_response.body)
         )
     }
@@ -222,7 +212,7 @@ new O_http_request_handler(
     ){
         
         // console.log(o_http_connection);
-        console.log(o_request_event);
+        // console.log(o_request_event);
         // console.log(o_webserver);
         var s_url_new = o_request_event.request.url.replace("http", "https");
         s_url_new = s_url_new.replace(":"+o_webserver.o_config.o_not_encrypted.n_port, ":"+o_webserver.o_config.o_encrypted.n_port)
