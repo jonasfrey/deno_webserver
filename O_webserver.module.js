@@ -1,7 +1,4 @@
-import {
-    serve,
-    serveTls
-} from "https://deno.land/std@0.154.0/http/server.ts";
+
 
 import {
     O_json_db
@@ -13,18 +10,50 @@ import { f_a_o_url_stack_trace } from "./f_a_o_url_stack_trace.module.js";
 
 import {o_http_request_handler_file_explorer } from "./a_o_http_request_handler.module.js"
 
-class O_webserver {
-    constructor() {
+import {o_http_request_handler_redirect_http_to_https} from "./a_o_http_request_handler.module.js"
 
+import {o_http_request_handler_default} from "./a_o_http_request_handler.module.js"
+
+class O_webserver {
+    constructor(
+        s_path_o_webserver_root
+    ) {
+        console.warn(`if you use self-signed ssl certificates, you may need to start deno like so: 'deno run  --unsafely-ignore-certificate-errors myscript.js'`)
+        this.s_path_o_webserver_root = s_path_o_webserver_root
         this.o_json_db = new O_json_db()
         this.a_o_url_stack_trace = f_a_o_url_stack_trace();
         this.o_url_import_meta_url = new O_url(import.meta.url);
-    
+        this.s_file_name = import.meta.url.split("/").pop();
         this.s_directory_seperator = "/"
         var o_self = this
         this.b_init = false
-    }
+        if(s_path_o_webserver_root == undefined || s_path_o_webserver_root == null){
+            console.error(
+                `
+                ${this.s_file_name}: needs to know the path of the root folder !, please pass this string as the first argument like this: 
 
+                //windows
+                var s_folder_separator = "\\"
+                //linux
+                var s_folder_separator = "/"
+
+                var s_path_o_webserver_root = import.meta.url
+                        .split("file://")
+                        .pop()
+                        .split(s_folder_separator)
+                        .slice(0,-1)
+                        .join(s_folder_separator)
+
+                var o_webserver = new O_webserver(
+                    s_path_o_webserver_root
+                );
+
+                o_webserver.f_serve_all();
+                `
+            )
+            Deno.exit(1)
+        }
+    }
 
     async f_download_ifnotexisting_remote_module_and_import(s_path_relative){
 
@@ -132,52 +161,84 @@ class O_webserver {
         await o_self.f_check_if_ssl_exists();
 
         await this.f_init();
-        var {f_http_request_handler} = await import("./f_http_request_handler.module.js");
 
         // var self = this;
-        return serveTls(
-            async function(
-                o_request,
-                o_connection_info
-            ) {
-                return f_http_request_handler(
-                    o_request,
-                    o_connection_info,
-                    o_self
-                )
-            }, {
+        var o_server_https = Deno.listenTls(
+            {
                 certFile: o_self.o_config.o_ssl.s_path_certificate_file,
                 keyFile: o_self.o_config.o_ssl.s_path_key_file,
                 port: o_self.o_config.o_encrypted.n_port,
                 hostname: o_self.o_config.o_encrypted.s_host,
             }
         );
+        
+        o_self.f_handle_connections_and_serve_http(o_server_https,o_http_request_handler_default);
 
     }
+
     async f_serve() {
         var o_self = this;
         await this.f_init();
-        return serve(
-            async function(o_request, o_connection_info) {
-                return o_http_request_handler_file_explorer.f_http_request_handler(
-                    o_request,
-                    o_connection_info,
-                    o_self
-                )
-            }, {
+        var o_server = Deno.listen(
+            {
                 port: parseInt(o_self.o_config.o_not_encrypted.n_port),
                 hostname: o_self.o_config.o_not_encrypted.s_host,
             }
         )
+        o_self.f_handle_connections_and_serve_http(o_server,o_http_request_handler_redirect_http_to_https);
+        // o_self.f_handle_connections_and_serve_http(o_server,o_http_request_handler_file_explorer);
+    }
+    async f_handle_connections_and_serve_http(o_server,o_http_request_handler){
+        var o_self = this;
 
+        while (true) {
+            try {
+              const o_connection = await o_server.accept();
+              // ... handle the o_connectionection ...
+            //   console.log(o_connection)
+                const o_http_connection = Deno.serveHttp(o_connection);
+                while (true) {
+
+                  try { 
+                    const o_request_event = await o_http_connection.nextRequest();
+                    // ... handle o_request_event ...
+                    // console.log(`${this.s_file_name}: o_request_event: ${o_request_event}`)
+                    await o_http_request_handler.f_http_request_handler(
+                        o_http_connection, 
+                        o_request_event,
+                        o_self
+                    )                    
+
+                    // await o_request_event.respondWith(
+                    //     new Response("hello world", {
+                    //       status: 200,
+                    //     }),
+                    //   );
+
+                  } catch (err) {
+                    console.log(`${this.s_file_name}: connection has finished or error: ${err}`)
+                    console.log(`${err.stack}`)
+                    // the connection has finished
+                    break;
+                  }
+                }
+
+            } catch (err) {
+                console.log(`${this.s_file_name}: listener has closed: or error: ${err}`)
+            console.log(`${err.stack}`)
+
+              // The listener has closed
+              break;
+            }
+          }
     }
 
     async f_serve_all() {
         var o_self = this
 
         await this.f_init();
-        await this.f_serve()
-        await this.f_serveTls()
+        this.f_serve()
+        this.f_serveTls()
 
         console.log(`HTTP webserver running. Access it at: ${o_self.o_config.o_not_encrypted.s_url}`);
         console.log(`HTTPS webserver running. Access it at: ${o_self.o_config.o_encrypted.s_url}`);
