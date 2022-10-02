@@ -45,9 +45,6 @@ var o_http_request_handler_default = new O_http_request_handler(
         o_webserver.s_path_o_webserver_root +
             `/${o_URL.hostname}/f_http_request_handler.module.js`
 
-            console.log(o_URL)
-        console.log(o_webserver)
-        console.log(s_pathfile_handler_default)
 
         try{
             var o_stat = await Deno.stat(s_pathfile_handler_default);
@@ -62,7 +59,7 @@ var o_http_request_handler_default = new O_http_request_handler(
             // var o_url_first_js_file = o_webserver.a_o_url_stack_trace.slice(-1)[0];
             // var s_pathfile_local_handler = o_url_first_js_file.o_URL.href.split("/").slice(0,-1).join("/") +"/"+ s_pathfile_handler_default;
             // var o_module = await import(s_pathfile_local_handler);
-            var o_module = await import(s_pathfile_handler_default);
+            var o_module = await import("file://"+s_pathfile_handler_default); // file:// is very important
             // console.log(o_module)
             // var a = o_module.f_http_request_handler(
             //     o_http_connection, 
