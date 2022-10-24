@@ -188,6 +188,22 @@ class O_webserver {
         o_self.f_handle_connections_and_serve_http2(o_server,o_http_request_handler_default);
         // o_self.f_handle_connections_and_serve_http(o_server,o_http_request_handler_file_explorer);
     }
+
+    async f_handle_connections_and_serve_http2(o_server,o_http_request_handler){
+        for await (const o_connection of o_server) {
+            (async () => {
+              const o_http_connection = Deno.serveHttp(o_connection);
+              for await (const o_request_event of o_http_connection) {
+                return o_http_request_handler.f_http_request_handler(
+                    o_http_connection, 
+                    o_request_event,
+                    o_self
+                )
+                // ... handle requestEvent ...
+              }
+            })();
+          }
+    }
     async f_handle_connections_and_serve_http(o_server,o_http_request_handler){
         var o_self = this;
 
@@ -238,22 +254,6 @@ class O_webserver {
           }
     }
 
-    async f_handle_connections_and_serve_http2(o_server,o_http_request_handler){
-        for await (const o_connection of o_server) {
-            (async () => {
-              const o_http_connection = Deno.serveHttp(o_connection);
-              for await (const o_request_event of o_http_connection) {
-                return await o_http_request_handler.f_http_request_handler(
-                    o_http_connection, 
-                    o_request_event,
-                    o_self
-                )
-                // ... handle requestEvent ...
-              }
-            })();
-          }
-
-    }
 
     async f_serve_all() {
         var o_self = this
