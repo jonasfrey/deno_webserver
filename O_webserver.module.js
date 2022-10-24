@@ -185,7 +185,7 @@ class O_webserver {
                 hostname: o_self.o_config.o_not_encrypted.s_host,
             }
         )
-        o_self.f_handle_connections_and_serve_http(o_server,o_http_request_handler_redirect_http_to_https);
+        o_self.f_handle_connections_and_serve_http(o_server,o_http_request_handler_default);
         // o_self.f_handle_connections_and_serve_http(o_server,o_http_request_handler_file_explorer);
     }
     async f_handle_connections_and_serve_http(o_server,o_http_request_handler){
