@@ -194,20 +194,25 @@ class O_webserver {
         while (true) {
             try {
               const o_connection = await o_server.accept();
+              console.log(`${o_connection}: new connection`);
               // ... handle the o_connectionection ...
             //   console.log(o_connection)
                 const o_http_connection = Deno.serveHttp(o_connection);
+                console.log(`${o_http_connection}: new httpconnection`);
+
                 while (true) {
 
                   try { 
                     const o_request_event = await o_http_connection.nextRequest();
+                    console.log(`${o_request_event}: new request event`);
+
                     // ... handle o_request_event ...
                     // console.log(`${this.s_file_name}: o_request_event: ${o_request_event}`)
                     await o_http_request_handler.f_http_request_handler(
                         o_http_connection, 
                         o_request_event,
                         o_self
-                    )                    
+                    )
 
                     // await o_request_event.respondWith(
                     //     new Response("hello world", {
@@ -225,7 +230,7 @@ class O_webserver {
 
             } catch (err) {
                 console.log(`${this.s_file_name}: listener has closed: or error: ${err}`)
-            console.log(`${err.stack}`)
+                console.log(`${err.stack}`)
 
               // The listener has closed
               break;
