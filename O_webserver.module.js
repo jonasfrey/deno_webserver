@@ -172,7 +172,12 @@ class O_webserver {
             }
         );
         
-        o_self.f_handle_connections_and_serve_http2(o_server_https,o_http_request_handler_default);
+        // Connections to the server will be yielded up as an async iterable.
+        for await (const o_connection of o_server_https) {
+            // In order to not be blocking, we need to handle each connection individually
+            // without awaiting the function
+            o_self.f_serve_http(o_connection);
+        }
 
     }
 
@@ -185,8 +190,14 @@ class O_webserver {
                 hostname: o_self.o_config.o_not_encrypted.s_host,
             }
         )
-        o_self.f_handle_connections_and_serve_http2(o_server,o_http_request_handler_default);
-        // o_self.f_handle_connections_and_serve_http(o_server,o_http_request_handler_file_explorer);
+
+        // Connections to the server will be yielded up as an async iterable.
+        for await (const o_connection of o_server) {
+            // In order to not be blocking, we need to handle each connection individually
+            // without awaiting the function
+            o_self.f_serve_http(o_connection);
+        }
+
     }
 
     async f_handle_connections_and_serve_http2(o_server,o_http_request_handler){
@@ -205,7 +216,7 @@ class O_webserver {
             })();
           }
     }
-    async f_handle_connections_and_serve_http(o_server,o_http_request_handler){
+    async f_handle_connections_and_serve_http(o_server){
         var o_self = this;
 
         while (true) {
@@ -225,7 +236,7 @@ class O_webserver {
 
                     // ... handle o_request_event ...
                     // console.log(`${this.s_file_name}: o_request_event: ${o_request_event}`)
-                    await o_http_request_handler.f_http_request_handler(
+                    await o_http_request_handler_default.f_http_request_handler(
                         o_http_connection, 
                         o_request_event,
                         o_self
@@ -254,6 +265,34 @@ class O_webserver {
             }
           }
     }
+
+    async f_serve_http(o_connection) {
+        var o_self = this
+        // This "upgrades" a network connection into an HTTP connection.
+        const o_http_connection = Deno.serveHttp(o_connection);
+        // Each request sent over the HTTP connection will be yielded as an async
+        // iterator from the HTTP connection.
+        try{
+          for await (const o_request_event of o_http_connection) {
+            // The native HTTP server uses the web standard `Request` and `Response`
+            // objects.
+            try{
+                o_http_request_handler_default.f_http_request_handler(
+                    o_http_connection, 
+                    o_request_event,
+                    o_self
+                )
+            }catch(o_e){
+              console.log("error")
+              console.log(o_e)
+            }
+          }
+      
+        }catch(o_e){
+          console.log("error with `for await (const requestEvent of httpConn) {`")
+          console.log(o_e)
+        }
+      }
 
 
     async f_serve_all() {
