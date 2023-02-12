@@ -31,11 +31,14 @@ o_webserver.f_serve_all();
 and create a testfile for the domain name localhost
 ```
 mkdir localhost
-echo "test hurray" > ./localhost/test.txt
 ```
 create the default behaviour of a file explorer
 ```
 wget https://deno.land/x/o_webserver@[n_version]/f_http_request_handler.module.js.example > ./localhost/f_http_request_handler.module.js"
+```
+create a testfile wich acts as testcontent
+```
+echo "server running" > ./localhost/test.txt 
 ```
 ### visit the page 
 ```
