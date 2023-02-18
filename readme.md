@@ -58,5 +58,5 @@ pm2 start webserver.js --interpreter="deno" --interpreter-args="run --allow-net"
 ```
 pm2 status
 ```
-
-
+...
+thats it
