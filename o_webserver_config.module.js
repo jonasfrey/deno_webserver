@@ -27,7 +27,8 @@ var o_webserver_config = {
       },
       s_path_certificate_file : "./self_signed_cert.crt", // 
       s_path_key_file : "./self_signed_key.key",
-  }
+  }, 
+  n_ms_delta_max_a_o_request: 10*24*60*60*1000, //older requests will be delted
 }
 
 import {f_evaluate_object} from "https://deno.land/x/f_evaluate_object@0.1/f_evaluate_object.module.js"

@@ -35,7 +35,15 @@ var o_http_request_handler_default = new O_http_request_handler(
                 o_webserver.o_json_db.f_a_o_create(
                     O_request,
                     o_request
+                );
+                let n_ts_ms_now = new Date().getTime();
+                o_webserver.o_json_db.f_a_o_delete(
+                    O_request, 
+                    function(o){
+                        return o[o_webserver.o_json_db.o_config.s_prop_name_timestamp_create_number] < n_ts_ms_now - o_webserver.o_config.n_ms_delta_max_a_o_request;
+                    }
                 )
+
             },
             function(){//f_reject
             }
