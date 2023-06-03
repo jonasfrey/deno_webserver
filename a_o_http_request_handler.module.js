@@ -1,7 +1,7 @@
 
 import {O_folder_file} from "https://deno.land/x/o_folder_file@0.3/O_folder_file.module.js"
 import {O_request} from "./O_request.module.js"
-import { O_url } from "https://deno.land/x/o_url@0.6/O_url.module.js";
+import { O_url } from "https://deno.land/x/o_url@0.7/O_url.module.js";
 
 class O_http_request_handler{
     constructor(
