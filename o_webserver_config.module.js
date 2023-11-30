@@ -1,4 +1,5 @@
 var o_webserver_config = {
+  b_log_requests: false,
   o_default_domain_o_config: {
       s_default_file: "client.html",
   },
