@@ -27,7 +27,7 @@ var o_http_request_handler_default = new O_http_request_handler(
             o_request_event.request.url,
         )
         
-        if(o_webserver.b_log_requests){
+        if(o_webserver?.b_log_requests){
 
             var o_url = new O_url(o_request_event.request.url)
             o_url.f_update_o_geolocation().then(
